@@ -19,11 +19,15 @@ export async function createContext(
     // In development mode without OAuth, create a mock user
     if (process.env.NODE_ENV === "development" && !process.env.OAUTH_SERVER_URL) {
       user = {
-        id: "dev-user-id",
+        id: 1,
+        openId: "dev-user",
         email: "dev@localhost",
         name: "Dev User",
+        loginMethod: "development",
+        role: "admin",
         createdAt: new Date(),
         updatedAt: new Date(),
+        lastSignedIn: new Date(),
       } as User;
     } else {
       // Authentication is optional for public procedures in production.

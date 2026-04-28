@@ -8,6 +8,7 @@ import { registerStorageProxy } from "./storageProxy";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
+import { connectDb, getDatabaseStatus } from "../db";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -29,11 +30,36 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 }
 
 async function startServer() {
+  const db = await connectDb();
+  const dbStatus = getDatabaseStatus();
+
+  if (!db) {
+    console.warn("[Startup] MongoDB not connected.", dbStatus);
+    if (process.env.NODE_ENV === "production") {
+      throw new Error(
+        dbStatus.error || "MongoDB connection failed during startup"
+      );
+    }
+  } else {
+    console.log(
+      `[Startup] MongoDB connected to '${dbStatus.databaseName}' successfully`
+    );
+  }
+
   const app = express();
   const server = createServer(app);
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
+  app.get("/api/health", (_req, res) => {
+    const status = getDatabaseStatus();
+    res.status(status.connected || !status.configured ? 200 : 503).json({
+      ok: true,
+      database: status,
+    });
+  });
+
   registerStorageProxy(app);
   registerOAuthRoutes(app);
   // tRPC API

@@ -32,8 +32,8 @@ A premium, real-time adaptive scheduling system that intelligently fits personal
 **Backend:**
 - Node.js + Express
 - tRPC for end-to-end type safety
-- Drizzle ORM for database management
-- MySQL for data persistence
+- MongoDB Node.js driver for database access
+- MongoDB for data persistence
 
 **Authentication:**
 - Manus OAuth for secure user authentication
@@ -41,9 +41,9 @@ A premium, real-time adaptive scheduling system that intelligently fits personal
 
 ### Database Schema
 
-The application uses the following core tables:
+The application uses the following core collections:
 
-| Table | Purpose |
+| Collection | Purpose |
 |-------|---------|
 | `users` | User accounts and authentication |
 | `habits` | User-defined habits with metadata |
@@ -101,7 +101,7 @@ smart-habit-tracker/
 ### Prerequisites
 
 - Node.js 22+ and pnpm
-- MySQL database
+- MongoDB database
 - Manus OAuth credentials
 
 ### Installation
@@ -118,17 +118,15 @@ smart-habit-tracker/
 
 3. **Set up environment variables**:
    The following environment variables are automatically injected:
-   - `DATABASE_URL`: MySQL connection string
+   - `DATABASE_URL`: MongoDB connection string
    - `JWT_SECRET`: Session signing secret
    - `VITE_APP_ID`: Manus OAuth app ID
    - `OAUTH_SERVER_URL`: Manus OAuth server URL
    - `VITE_OAUTH_PORTAL_URL`: Manus login portal URL
+   You can start from `.env.example` for local development.
 
-4. **Run database migrations**:
-   ```bash
-   pnpm drizzle-kit generate
-   pnpm drizzle-kit migrate
-   ```
+4. **Initialize the database**:
+   MongoDB collections and indexes are created automatically when the server starts.
 
 5. **Start the development server**:
    ```bash
@@ -136,6 +134,7 @@ smart-habit-tracker/
    ```
 
    The application will be available at `http://localhost:3000`
+   Health check: `http://localhost:3000/api/health`
 
 ### Build for Production
 
@@ -326,7 +325,7 @@ Tests are written with Vitest and located alongside source files with `.test.ts`
 
 - **Authentication**: Manus OAuth with secure session cookies
 - **Authorization**: Protected procedures verify user identity
-- **Database**: Parameterized queries prevent SQL injection
+- **Database**: MongoDB collections are accessed through the official driver and indexed on startup
 - **Environment Variables**: Sensitive data stored in environment, not in code
 
 ## 📊 Analytics Implementation
@@ -354,12 +353,11 @@ Charts are fully responsive and work on all screen sizes.
 
 ### Adding New Features
 
-1. **Update Database Schema**: Modify `drizzle/schema.ts`
-2. **Generate Migration**: Run `pnpm drizzle-kit generate`
-3. **Add Query Helpers**: Update `server/db.ts`
-4. **Create tRPC Procedures**: Add to `server/routers.ts`
-5. **Build UI Components**: Create in `client/src/pages/` or `client/src/components/`
-6. **Test End-to-End**: Verify in browser and with tests
+1. **Update App Models**: Modify `drizzle/schema.ts`
+2. **Add Query Helpers**: Update `server/db.ts`
+3. **Create tRPC Procedures**: Add to `server/routers.ts`
+4. **Build UI Components**: Create in `client/src/pages/` or `client/src/components/`
+5. **Test End-to-End**: Verify in browser and with tests
 
 ### Code Style
 
@@ -372,8 +370,8 @@ Charts are fully responsive and work on all screen sizes.
 ## 🐛 Troubleshooting
 
 ### Database Connection Issues
-- Verify `DATABASE_URL` environment variable is set correctly
-- Ensure MySQL server is running
+- Verify `DATABASE_URL` points to a reachable MongoDB instance
+- Ensure the MongoDB server is running
 - Check database credentials
 
 ### OAuth Not Working

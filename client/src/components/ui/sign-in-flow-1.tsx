@@ -368,7 +368,7 @@ const AnimatedText: React.FC<{ text: string; className?: string; by?: 'letter' |
   };
 
   return (
-    <motion.div className={className} variants={containerVariants} initial="hidden" animate="visible">
+    <motion.div className={`text-center w-full ${className || ''}`} variants={containerVariants} initial="hidden" animate="visible">
       {items.map((item, index) => (
         <motion.span key={index} variants={itemVariants} style={{ display: 'inline-block' }}>
           {item === ' ' ? '\u00A0' : item}{by === 'word' && index < items.length - 1 ? '\u00A0' : ''}
@@ -617,62 +617,60 @@ export const SignInPage = ({ className }: SignInPageProps) => {
         <MiniNavbar />
 
         <div className="flex flex-1 flex-col lg:flex-row ">
-          <div className="flex-1 flex flex-col justify-center items-center">
-            <div className="w-full mt-[150px] max-w-sm">
+          <div className="flex-1 flex flex-col items-center justify-start pt-32 sm:pt-36 lg:pt-60 pb-10 sm:pb-14">
+              <div className="w-full flex flex-col items-center">
               <AnimatePresence mode="wait">
                 {step === "email" ? (
-                  <motion.div 
-                    key="email-step"
-                    initial={{ opacity: 0, x: -100 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -100 }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
-                    className="space-y-6 text-center"
-                  >
-                     <div className="space-y-1">
-                        <AnimatedText text="Smart Habit Tracker" className="text-[2.5rem] font-bold leading-[1.1] tracking-tight text-white" />
-                        <AnimatedText text="Build better habits, master your time" className="text-[1.8rem] text-white/70 font-light" />
-                      </div>
-                    
-                    
-                    <div className="space-y-4">
-                      <button className="backdrop-blur-[2px] w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-full py-3 px-4 transition-colors">
-                        <span className="text-lg">G</span>
-                        <span>Sign in with Google</span>
-                      </button>
-                      
-                      <div className="flex items-center gap-4">
-                        <div className="h-px bg-white/10 flex-1" />
-                        <span className="text-white/40 text-sm">or</span>
-                        <div className="h-px bg-white/10 flex-1" />
-                      </div>
-                      
-                      <form onSubmit={handleEmailSubmit}>
-                        <div className="relative">
-                          <input 
-                            type="email" 
-                            placeholder="info@gmail.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full backdrop-blur-[1px] text-white border-1 border-white/10 rounded-full py-3 px-4 focus:outline-none focus:border focus:border-white/30 text-center"
-                            required
-                          />
-                          <button 
-                            type="submit"
-                            className="absolute right-1.5 top-1.5 text-white w-9 h-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 transition-colors group overflow-hidden"
-                          >
-                            <span className="relative w-full h-full block overflow-hidden">
-                              <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:translate-x-full">
-                                →
-                              </span>
-                              <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 -translate-x-full group-hover:translate-x-0">
-                                →
-                              </span>
-                            </span>
-                          </button>
+                   <motion.div 
+                     key="email-step"
+                     initial={{ opacity: 0, x: -100 }}
+                     animate={{ opacity: 1, x: 0 }}
+                     exit={{ opacity: 0, x: -100 }}
+                     transition={{ duration: 0.4, ease: "easeOut" }}
+                     className="flex flex-col items-center text-center">
+                     <div className="flex flex-col items-center justify-center w-full max-w-4xl mx-auto mb-10 px-4 sm:px-6">
+                         <AnimatedText text="Smart Habit" className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.15] tracking-[0.04em] text-white font-antialiased [text-shadow:0_0_80px_rgba(255,255,255,0.12)] [font-kerning:normal]" />
+                         <AnimatedText text="Tracker" className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.15] tracking-[0.04em] text-white font-antialiased [text-shadow:0_0_80px_rgba(255,255,255,0.12)] [font-kerning:normal]" />
+                         <AnimatedText text="Build better habits, master your time" className="text-sm sm:text-base text-white/55 font-light leading-relaxed font-antialiased tracking-[0.25em] mt-6" />
+                       </div>
+                     
+                     <div className="space-y-5 w-full max-w-sm mx-auto">
+                        <button className="w-full flex items-center justify-center gap-2 bg-white/[0.08] hover:bg-white/[0.14] text-white border border-white/[0.25] rounded-full py-3.5 px-4 transition-all duration-300 text-sm font-medium">
+                          <span className="text-base font-bold">G</span>
+                          <span>Sign in with Google</span>
+                        </button>
+                                              <div className="flex items-center gap-4">
+                          <div className="h-px bg-white/[0.2] flex-1" />
+                          <span className="text-white/50 text-xs tracking-[0.2em] uppercase">or</span>
+                          <div className="h-px bg-white/[0.2] flex-1" />
                         </div>
-                      </form>
-                    </div>
+                       
+                       <form onSubmit={handleEmailSubmit}>
+                         <div className="relative">
+                            <input 
+                              type="email" 
+                              placeholder="info@gmail.com"
+                              value={email}
+                              onChange={(e) => setEmail(e.target.value)}
+                              className="w-full bg-white/[0.07] text-white border border-white/[0.25] rounded-full py-3.5 px-4 focus:outline-none focus:border-white/[0.5] text-center text-sm tracking-wide placeholder:text-white/50 transition-all duration-300"
+                              required
+                           />
+                           <button 
+                             type="submit"
+                             className="absolute right-1.5 top-1.5 text-white/70 w-9 h-9 flex items-center justify-center rounded-full bg-white/[0.05] hover:bg-white/[0.1] transition-colors group overflow-hidden"
+                           >
+                             <span className="relative w-full h-full block overflow-hidden">
+                               <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:translate-x-full">
+                                 →
+                               </span>
+                               <span className="absolute inset-0 flex items-center justify-center transition-transform duration-300 -translate-x-full group-hover:translate-x-0">
+                                 →
+                               </span>
+                             </span>
+                           </button>
+                         </div>
+                       </form>
+                     </div>
                     
 
                   </motion.div>
